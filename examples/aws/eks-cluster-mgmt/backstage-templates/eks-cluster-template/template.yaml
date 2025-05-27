@@ -43,12 +43,12 @@ spec:
           title: Account ID
           type: string
           description: AWS Account ID
-          default: "396949514805"
+          default: "123456789012"
         managementAccountId:
           title: Management Account ID
           type: string
           description: AWS Management Account ID
-          default: "396949514805"
+          default: "123456789012"
         tenant:
           title: Tenant Name
           type: string
@@ -56,7 +56,7 @@ spec:
           default: "tenant1"
         repoHostUrl:
           type: string
-          default: d38kauakx1qzb7.cloudfront.net
+          default: gitlab.cloudfront.net
           ui:widget: hidden
         repoUsername:
           type: string
@@ -72,22 +72,22 @@ spec:
           title: Addons Repository URL
           type: string
           description: Git repository URL for addons
-          default: "https://d38kauakx1qzb7.cloudfront.net/user1/eks-cluster-mgmt.git"
+          default: "https://gitlab.cloudfront.net/user1/eks-cluster-mgmt.git"
         fleetRepoUrl:
           title: Fleet Repository URL
           type: string
           description: Git repository URL for fleet
-          default: "https://d38kauakx1qzb7.cloudfront.net/user1/eks-cluster-mgmt.git"
+          default: "https://gitlab.cloudfront.net/user1/eks-cluster-mgmt.git"
         platformRepoUrl:
           title: Platform Repository URL
           type: string
           description: Git repository URL for platform
-          default: "https://d38kauakx1qzb7.cloudfront.net/user1/eks-cluster-mgmt.git"
+          default: "https://gitlab.cloudfront.net/user1/eks-cluster-mgmt.git"
         workloadRepoUrl:
           title: Workload Repository URL
           type: string
           description: Git repository URL for workload
-          default: "https://d38kauakx1qzb7.cloudfront.net/user1/eks-cluster-mgmt.git"
+          default: "https://gitlab.cloudfront.net/user1/eks-cluster-mgmt.git"
     - title: Cluster Addons Configuration
       properties:
         enableIngressClassAlb:
