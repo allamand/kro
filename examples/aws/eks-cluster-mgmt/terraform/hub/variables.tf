@@ -217,3 +217,8 @@ variable "account_ids" {
   type        = string
   default     = ""
 }
+
+variable "backstage_app_image" {
+  description = "The Url and tag of Backstage image"
+  default     = ""
+}

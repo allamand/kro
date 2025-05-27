@@ -111,6 +111,7 @@ resource "kubernetes_secret" "git_credentials" {
     GIT_URL      = "${local.git_url}"
     GIT_USERNAME = "${var.git_org_name}"
     GIT_PASSWORD = data.external.env_vars.result.IDE_PASSWORD
+    WORKING_REPO = data.external.env_vars.result.WORKING_REPO
   }
 }
 

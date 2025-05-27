@@ -6,6 +6,7 @@ tenant                          = "tenant1"
 
 git_url                         = ""
 git_org_name                    = "user1"
+backstage_app_image             = "" # ghcr.io/cnoe-io/backstage-app:135c0cb26f3e004a27a11edb6a4779035aff9805
 
 gitops_addons_repo_name         = "eks-cluster-mgmt"
 gitops_addons_repo_base_path    = "addons/"

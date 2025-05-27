@@ -175,11 +175,11 @@ data:
       rules:
         - allow: [Component, System, API, Resource, Location, Template]
       locations:
-        # Examples from a public GitHub repository.
+        # Templates from Gitlab.
         - type: url
-          target: ${GIT_URL}${GIT_USERNAME}/idpbuilder-localdev-backstage-templates-entities/raw/branch/main/catalog-info.yaml
+          target: ${GIT_URL}${GIT_USERNAME}/${WORKING_REPO}/-/blob/main/backstage-templates/catalog-info.yaml
           rules:
-            - allow: [Component, System, API, Resource, Location, Template, User, Group]
+            - allow: [ Component, System, API, Resource, Location, Template, User, Group ]
     kubernetes:
       serviceLocatorMethod:
         type: 'multiTenant'
@@ -272,6 +272,10 @@ spec:
               value: "/app/config/ca.crt"
             - name: DOMAIN_NAME
               value: {{ .Values.ingress_domain_name }}
+            - name: NODE_ENV
+              value: development
+            - name: NODE_OPTIONS
+              value: --no-node-snapshot
           envFrom:
             - secretRef:
                 name: backstage-env-vars
@@ -279,7 +283,7 @@ spec:
                 name: git-credentials
             - secretRef:
                 name: argocd-credentials
-          image: ghcr.io/cnoe-io/backstage-app:135c0cb26f3e004a27a11edb6a4779035aff9805
+          image: {{ .Values.backstage_app_image }}
           name: backstage
           ports:
             - containerPort: 7007
