@@ -157,7 +157,7 @@ spec:
       action: roadiehq:utils:fs:append
       input:
         path: ./repo/addons/tenants/tenant1/default/addons/multi-acct/values.yaml
-        content: "\n  ${{ parameters.clusterName }}: ${{ parameters.accountId }}"
+        content: "\n  ${{ parameters.clusterName }}: \"${{ parameters.accountId }}\""
     - id: addKroClusterConfig
       name: Update KRO Clusters Configuration
       action: roadiehq:utils:fs:append
