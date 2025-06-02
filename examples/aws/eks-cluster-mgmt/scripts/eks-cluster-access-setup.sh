@@ -193,25 +193,26 @@ parse_values_yaml() {
     
     print_header "Parsing values.yaml to extract cluster information"
     
-    # Debug: Count clusters in the file
-    local cluster_count=$(grep -c "^[[:space:]]*cluster-" "$VALUES_FILE")
+    # Debug: Count active (non-commented) clusters in the file
+    local cluster_count=$(grep -c "^[[:space:]]*cluster-" "$VALUES_FILE" | grep -v "^[[:space:]]*#")
     print_info "Found $cluster_count cluster entries in values.yaml"
     
     # Use a more targeted approach to extract cluster information
     local clusters_found=0
     
-    # Get all cluster names from the file
-    local cluster_names=$(grep -o "cluster-[a-zA-Z0-9_-]*:" "$VALUES_FILE" | sed 's/://')
+    # Get all active cluster names from the file (excluding commented lines)
+    # The pattern matches lines that start with whitespace followed by "cluster-" but not lines with "#" before "cluster-"
+    local cluster_names=$(grep "^[[:space:]]*cluster-[a-zA-Z0-9_-]*:" "$VALUES_FILE" | grep -v "^[[:space:]]*#" | sed 's/[[:space:]]*\(cluster-[a-zA-Z0-9_-]*\):.*/\1/')
     
     # Process each cluster
     for cluster_name in $cluster_names; do
         print_info "Processing cluster: $cluster_name"
         
-        # Extract account ID for this cluster
-        local account_id=$(grep -A 30 "$cluster_name:" "$VALUES_FILE" | grep "accountId:" | head -1 | sed 's/.*accountId:[[:space:]]*"\([^"]*\)".*/\1/')
+        # Extract account ID for this cluster (only from non-commented lines)
+        local account_id=$(grep -A 30 "$cluster_name:" "$VALUES_FILE" | grep "accountId:" | grep -v "^[[:space:]]*#" | head -1 | sed 's/.*accountId:[[:space:]]*"\([^"]*\)".*/\1/')
         
-        # Extract region for this cluster
-        local region=$(grep -A 30 "$cluster_name:" "$VALUES_FILE" | grep "region:" | head -1 | sed 's/.*region:[[:space:]]*"\([^"]*\)".*/\1/')
+        # Extract region for this cluster (only from non-commented lines)
+        local region=$(grep -A 30 "$cluster_name:" "$VALUES_FILE" | grep "region:" | grep -v "^[[:space:]]*#" | head -1 | sed 's/.*region:[[:space:]]*"\([^"]*\)".*/\1/')
         
         if [[ -n "$account_id" && -n "$region" ]]; then
             print_info "Found account ID for $cluster_name: $account_id"
