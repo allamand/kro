@@ -66,6 +66,10 @@ spec:
           type: string
           default: eks-cluster-mgmt
           ui:widget: hidden
+        ingressDomainName:
+          type: string
+          default: ingress.cloudfront.net
+          ui:widget: hidden
     - title: Git Repository URLs
       properties:
         addonsRepoUrl:
@@ -164,6 +168,28 @@ spec:
       input:
         path: ./repo/fleet/kro-values/tenants/tenant1/kro-clusters/values.yaml
         content: "\n  ${{ parameters.clusterName }}:\n    managementAccountId: \"${{ parameters.managementAccountId }}\"\n    accountId: \"${{ parameters.accountId }}\"\n    tenant: \"${{ parameters.tenant }}\"\n    environment: \"${{ parameters.environment }}\"\n    region: \"${{ parameters.region }}\"\n    k8sVersion: \"${{ parameters.k8sVersion }}\"\n    gitops:\n      addonsRepoUrl: \"${{ parameters.addonsRepoUrl }}\"\n      fleetRepoUrl: \"${{ parameters.fleetRepoUrl }}\"\n      platformRepoUrl: \"${{ parameters.platformRepoUrl }}\"\n      workloadRepoUrl: \"${{ parameters.workloadRepoUrl }}\"\n    addons:\n      enable_ingress_class_alb: \"${{ parameters.enableIngressClassAlb }}\"\n      enable_argo_rollouts: \"${{ parameters.enableArgoRollouts }}\"\n      enable_metrics_server: \"${{ parameters.enableMetricsServer }}\"\n      enable_external_secrets: \"${{ parameters.enableExternalSecrets }}\"\n      enable_kyverno: \"${{ parameters.enableKyverno }}\"\n      enable_kyverno_policies: \"${{ parameters.enableKyvernoPolicies }}\"\n      enable_kyverno_policy_reporter: \"${{ parameters.enableKyvernoPolicyReporter }}\"\n      enable_ack_iam: \"${{ parameters.enableAckIam }}\"\n      enable_ack_eks: \"${{ parameters.enableAckEks }}\"\n      enable_ack_efs: \"${{ parameters.enableAckEfs }}\"\n      enable_aws_efs_csi_driver: \"${{ parameters.enableAwsEfsCsiDriver }}\""
+    - id: addComponent
+      name: Add new component for Cluster
+      action: roadiehq:utils:fs:write
+      input:
+        path: ./repo/backstage-templates/components/${{ parameters.clusterName }}.yaml
+        content: |
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.clusterName }}
+            description: EKS Cluster deployed by kro
+            links:
+              - url: https://${{ parameters.domainName }}/argocd/applications/argocd/clusters
+                title: ArgoCD App URL
+                icon: externalLink
+              - url: https://${{ parameters.repoHostUrl }}/${{ parameters.repoUsername }}/${{ parameters.repoName }}/-/blob/main/fleet/kro-values/tenants/tenant1/kro-clusters/values.yaml
+                title: Git Repo URL
+                icon: github
+          spec:
+            owner: guests
+            lifecycle: experimental
+            type: service
     # - id: mergeConfig
     #   name: Update Clusters Configuration
     #   action: roadiehq:utils:merge
@@ -196,6 +222,12 @@ spec:
         branchName: new-cluster
         removeSourceBranch: true
         commitAction: auto
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        catalogInfoUrl: https://${{ parameters.repoHostUrl }}/${{ parameters.repoUsername }}/${{ parameters.repoName }}/-/blob/main/backstage-templates/components/${{ parameters.clusterName }}.yaml
+        optional: true
   output:
     links:
       - title: Gitlab MergeRequest URL
