@@ -294,6 +294,10 @@ add_known_clusters
 # Generate the HTML dashboard
 generate_dashboard
 
+print_header "Default to hub cluster"
+kubectx hub-cluster
+
 print_success "Dashboard generation completed."
 print_info "Dashboard available at: ${BOLD}$OUTPUT_HTML${NC}"
 print_info "Open this file in a web browser to view all environments side by side."
+
